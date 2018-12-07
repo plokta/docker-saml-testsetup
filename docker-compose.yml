@@ -1,0 +1,41 @@
+version: '3'
+services:
+  simplesamlphp_idp:
+    build: .
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: http://localhost:8180
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://localhost:8180/simplesaml/module.php/saml/sp/saml2-acs.php/Test-IdP
+      SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: http://localhost:8180/simplesaml/module.php/saml/sp/saml2-logout.php/Test-IdP
+      SIMPLESAMLPHP_TRUSTED_DOMAINS: localhost:8180,localhost:8080,localhost:8443,localhost:8543
+      SIMPLESAMLPHP_SLO_RESP_BINDING: "${SLO_RESP_BINDING:-HTTP-Redirect}"
+      SIMPLESAMLPHP_BASEURLPATH: http://localhost:8080/simplesaml/
+      SIMPLESAMLPHP_ADMIN_PASSWORD: secret
+      SIMPLESAMLPHP_SECRET_SALT: secret-salt
+      SIMPLESAMLPHP_IS_IDP: "true"
+      SIMPLESAMLPHP_ENCRYPT_ASSERTIONS: "${ENCRYPT_ASSERTION:-true}"
+      SIMPLESAMLPHP_SIGN_RESPONSE: "${SIGN_RESP:-true}"
+      SIMPLESAMLPHP_SIGN_ASSERTION: "${SIGN_ASSERTION:-true}"
+      SIMPLESAMLPHP_SIGNATURE_ALGORITHM: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+      SIMPLESAMLPHP_SIGN_LOGOUT: "true"
+      SIMPLESAMLPHP_VALIDATE_AUTHNREQUEST: "${VALIDATE_AUTHREQ:-false}"
+      SIMPLESAMLPHP_VALIDATE_LOGOUT: "false"
+    ports:
+      - "8080:8080"
+      #- "8443:8443"
+  
+  simplesamlphp_sp:
+    build: .
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: http://localhost:8180
+      SIMPLESAMLPHP_IDP_METADATA_URL: http://localhost:8080/simplesaml/saml2/idp/metadata.php
+      SIMPLESAMLPHP_IDP_SSO_URL: http://localhost:8080/simplesaml/saml2/idp/SSOService.php
+      SIMPLESAMLPHP_TRUSTED_DOMAINS: localhost:8180,localhost:8080,localhost:8443,localhost:8543
+      SIMPLESAMLPHP_BASEURLPATH: http://localhost:8180/simplesaml/
+      SIMPLESAMLPHP_SIGN_AUTHNREQUEST: "${SIGN_REQ:-false}"
+      SIMPLESAMLPHP_SIGN_LOGOUT: "${SIGN_SLO_REQ:-false}"
+      SIMPLESAMLPHP_SIGNATURE_ALGORITHM: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+      SIMPLESAMLPHP_VALIDATE_LOGOUT: "true"
+      SIMPLESAMLPHP_REQUEST_BINDING: "${REQ_BINDING:-HTTP-Redirect}"
+    ports:
+      - "8180:8180"
+      #- "8543:8543"
