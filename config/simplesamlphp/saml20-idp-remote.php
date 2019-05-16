@@ -15,4 +15,5 @@ $metadata[getenv('SIMPLESAMLPHP_IDP_METADATA_URL')] = array(
     'sign.authnrequest' => getenv('SIMPLESAMLPHP_SIGN_AUTHNREQUEST') === 'true',
     'sign.logout' => getenv('SIMPLESAMLPHP_SIGN_LOGOUT') === 'true',
     'validate.logout' => getenv('SIMPLESAMLPHP_VALIDATE_LOGOUT') === 'true',
+    'encryption.blacklisted-algorithms' => array(),
 );
